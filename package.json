@@ -1,0 +1,54 @@
+{
+  "name": "dsh-usage-calendar",
+  "description": "DeepSeek account balance plus a per-day spend / token / cache-hit-rate calendar for the dsh web GUI",
+  "version": "0.1.2",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xiyi123465/dsh-usage-calendar.git"
+  },
+  "homepage": "https://github.com/xiyi123465/dsh-usage-calendar#readme",
+  "keywords": [
+    "deepseek",
+    "deepseek-harness",
+    "dsh",
+    "balance",
+    "usage-calendar"
+  ],
+  "type": "module",
+  "main": "lib/index.js",
+  "bin": {
+    "dsh-usage-calendar-install": "scripts/install.mjs"
+  },
+  "files": [
+    "lib/",
+    "cordis.patch.yml",
+    "scripts/install.mjs",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./usage": "./lib/usage.js",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-runtime",
+        "@deepseek-ai/dsh-client-ui-primitives"
+      ]
+    }
+  },
+  "scripts": {
+    "check": "node --check lib/index.js && node --check lib/usage.js && node --check lib/client.js && node --check scripts/install.mjs",
+    "smoke": "node scripts/smoke-host.mjs"
+  },
+  "license": "MIT"
+}
