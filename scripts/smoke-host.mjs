@@ -90,7 +90,16 @@ const fakeCtx = {
 			};
 		}
 		if (name === "sessions") {
-			return { list() { return []; } };
+			// Live session through the CURRENT harness API (seq-based
+			// `snapshotEvents()`, no legacy `.events` array) — regression
+			// test for the "calendar shows nothing" bug.
+			const liveSession = {
+				id: "live-test",
+				snapshotEvents() {
+					return events;
+				}
+			};
+			return { list() { return [liveSession]; } };
 		}
 		if (name === "sessionPersistence") {
 			return {
@@ -116,8 +125,12 @@ if (!paths.includes("/api/usage-calendar/usage")) throw new Error("usage route m
 if (!paths.includes("/api/usage-calendar/balance")) throw new Error("balance route missing");
 
 const usage = await collectUsage(fakeCtx);
-if (!Array.isArray(usage.days) || usage.days.length !== 0) throw new Error("empty-session collectUsage should return zero days");
-console.log("collectUsage OK (empty sessions)");
+if (!Array.isArray(usage.days) || usage.days.length !== 1) {
+	throw new Error(`expected 1 day from live session, got ${usage.days.length}`);
+}
+const liveDay = usage.days[0];
+if (liveDay.tokens !== 550) throw new Error(`expected 550 tokens from live session, got ${liveDay.tokens}`);
+console.log("collectUsage OK (live session via snapshotEvents):", JSON.stringify(liveDay));
 
 // ---- 3. exercise the balance handler through the stub server ----
 const balanceRoute = routes.find((r) => r.path === "/api/usage-calendar/balance");

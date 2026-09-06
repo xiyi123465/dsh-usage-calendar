@@ -36,7 +36,7 @@ npx --yes github:xiyi123465/dsh-usage-calendar
 1. 将 zip 解压到 `$DSH_HOME/vendor/dsh-usage-calendar`（Windows PowerShell）：
 
    ```powershell
-   Expand-Archive .\dsh-usage-calendar-0.1.2.zip -DestinationPath $env:USERPROFILE\.dsh\vendor
+   Expand-Archive .\dsh-usage-calendar-0.1.3.zip -DestinationPath $env:USERPROFILE\.dsh\vendor
    ```
 
 2. 运行安装器并重启 dsh web：
